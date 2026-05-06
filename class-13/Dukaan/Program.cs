@@ -10,35 +10,49 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. Service Registration Section ---
-// This is where we register dependencies for the built-in Dependency Injection (DI) container.
-
-// Register the Database Context with PostgreSQL support
+//
+// ─────────────────────────────────────
+// 1. DATABASE (PostgreSQL)
+// ─────────────────────────────────────
+//
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    );
 });
 
-// Register ASP.NET Core Identity for authentication
+//
+// ─────────────────────────────────────
+// 2. IDENTITY SETUP
+// ─────────────────────────────────────
+//
 builder.Services.AddIdentity<Merchant, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
-// Register application-specific services and repositories
+//
+// ─────────────────────────────────────
+// 3. APPLICATION SERVICES
+// ─────────────────────────────────────
+//
 builder.Services.AddScoped<TenantService>();
-builder.Services.AddScoped(typeof(Repository<>)); // Registers the generic repository
+builder.Services.AddScoped(typeof(Repository<>));
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-//register Iauthservice with authservice
-builder.Services.AddScoped<IAuthService,AuthService>();
-
-// Register OpenAPI (Swagger) for API documentation
+//
+// ─────────────────────────────────────
+// 4. CONTROLLERS + OPENAPI
+// ─────────────────────────────────────
+//
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-// Register MVC controllers
-builder.Services.AddControllers();
-
-
-// JWT Authentication
+//
+// ─────────────────────────────────────
+// 5. JWT AUTHENTICATION
+// ─────────────────────────────────────
+//
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -58,28 +72,36 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 
+//
+// ─────────────────────────────────────
+// 6. AUTHORIZATION
+// ─────────────────────────────────────
+//
 builder.Services.AddAuthorization();
 
+//
+// ─────────────────────────────────────
+// BUILD APP
+// ─────────────────────────────────────
+//
 var app = builder.Build();
+
+//
+// ─────────────────────────────────────
+// 7. MIDDLEWARE PIPELINE 
+// ─────────────────────────────────────
+//
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-
-// --- 2. Middleware Pipeline Section ---
-// This defines the order in which HTTP requests are processed.
-
-if (app.Environment.IsDevelopment())
-{
-    // Enables the interactive Swagger UI in development mode
-    app.MapOpenApi();
-}
-
-// Redirects HTTP requests to HTTPS
-app.UseHttpsRedirection();
-
-// Maps controller routes (e.g., [Route("api/[controller]")])
 app.MapControllers();
 
-// Starts the application
 app.Run();

@@ -25,7 +25,7 @@ public class AuthService : IAuthService
 
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-        var expiration = DateTime.UtcNow.AddHours(1);
+       
 
         if (user == null)
             throw new UnauthorizedAccessException("Invalid Email credentials");
@@ -35,8 +35,10 @@ public class AuthService : IAuthService
         if (!isValid)
             throw new UnauthorizedAccessException("Invalid Password credentials");
 
+        var expiration = DateTime.UtcNow.AddHours(1);
 
-        var token = GenerateJwtToken(user);
+
+        var token = GenerateJwtToken(user,expiration);
 
         return new AuthResponseDTO(
                  token,
@@ -50,7 +52,7 @@ public class AuthService : IAuthService
     }
 
 
-    private string GenerateJwtToken(Merchant user)
+    private string GenerateJwtToken(Merchant user,DateTime expiration)
     {
         var claims = new List<Claim>
         {
@@ -69,7 +71,7 @@ public class AuthService : IAuthService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: expiration,
             signingCredentials: creds
         );
 

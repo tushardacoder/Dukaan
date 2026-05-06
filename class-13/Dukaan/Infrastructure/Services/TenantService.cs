@@ -61,14 +61,3 @@ public class TenantService(
 
 
 
-
-
-//{
-//  "email": "example@gmail.com",
-//  "phoneNumber": "01700000000",
-//  "password": "Your@Password123",
-//  "storeName": "My Store",
-//  "slug": "my-store",
-//  "category": "electronics",
-//  "country": "Bangladesh"
-//}

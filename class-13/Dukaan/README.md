@@ -71,3 +71,14 @@ Once the application is running in development mode, you can access the OpenAPI 
 `https://localhost:<port>/openapi/v1.json` (or use the interactive UI if configured).
 
 
+
+
+//{
+//  "email": "example@gmail.com",
+//  "phoneNumber": "01700000000",
+//  "password": "Your@Password123",
+//  "storeName": "My Store",
+//  "slug": "my-store",
+//  "category": "electronics",
+//  "country": "Bangladesh"
+//}

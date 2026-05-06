@@ -21,7 +21,7 @@ namespace Dukaan.Host.Controllers
 
         public async Task<ActionResult> Login(LoginRequestDTO loginrequestdto)
         {
-                 var  response=_authService.LoginAsync(loginrequestdto);
+                 var  response=await _authService.LoginAsync(loginrequestdto);
                  return  Ok(response);
         }
 
