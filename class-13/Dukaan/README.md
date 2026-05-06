@@ -69,3 +69,5 @@ Dukaan/
 
 Once the application is running in development mode, you can access the OpenAPI documentation at:
 `https://localhost:<port>/openapi/v1.json` (or use the interactive UI if configured).
+
+

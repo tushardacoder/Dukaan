@@ -55,3 +55,17 @@ public class TenantService(
             : new RegisterResponse(tenant.Id, tenant.StoreName);
     }
 }
+
+
+
+
+
+//{
+//  "email": "example@gmail.com",
+//  "phoneNumber": "01700000000",
+//  "password": "Your@Password123",
+//  "storeName": "My Store",
+//  "slug": "my-store",
+//  "category": "electronics",
+//  "country": "Bangladesh"
+//}

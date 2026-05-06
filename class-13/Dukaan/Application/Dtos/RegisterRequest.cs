@@ -24,3 +24,14 @@ public record RegisterResponse(
     Guid TenantId,
     string StoreName
 );
+
+
+public record LoginRequestDTO(
+    string Email,
+    string Password
+);
+
+public record AuthResponseDTO(
+    string Token,
+    DateTime Expiration
+);
