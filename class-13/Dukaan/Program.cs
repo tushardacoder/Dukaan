@@ -4,6 +4,9 @@ using Dukaan.Infrastructure.Services;
 using Dukaan.Infrastructure.Data.Model;
 using Dukaan.Infrastructure.Data.DbContext;
 using Dukaan.Infrastructure.Data.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,13 +28,43 @@ builder.Services.AddIdentity<Merchant, IdentityRole<Guid>>()
 builder.Services.AddScoped<TenantService>();
 builder.Services.AddScoped(typeof(Repository<>)); // Registers the generic repository
 
+//register Iauthservice with authservice
+builder.Services.AddScoped<IAuthService,AuthService>();
+
 // Register OpenAPI (Swagger) for API documentation
 builder.Services.AddOpenApi();
 
 // Register MVC controllers
 builder.Services.AddControllers();
 
+
+// JWT Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        )
+    };
+});
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 // --- 2. Middleware Pipeline Section ---
 // This defines the order in which HTTP requests are processed.

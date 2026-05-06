@@ -1,6 +1,15 @@
 ﻿namespace Dukaan.Application.Dtos
 {
-    public class LoginRequest
-    {
-    }
+
+    public record LoginRequestDTO(
+    string Email,
+    string Password
+);
+
+    public record AuthResponseDTO(
+        string Token,
+        DateTime Expiration
+    );
+
+
 }
