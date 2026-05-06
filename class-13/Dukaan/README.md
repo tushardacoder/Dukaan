@@ -73,12 +73,3 @@ Once the application is running in development mode, you can access the OpenAPI 
 
 
 
-//{
-//  "email": "example@gmail.com",
-//  "phoneNumber": "01700000000",
-//  "password": "Your@Password123",
-//  "storeName": "My Store",
-//  "slug": "my-store",
-//  "category": "electronics",
-//  "country": "Bangladesh"
-//}

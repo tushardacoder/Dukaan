@@ -39,6 +39,7 @@ builder.Services.AddIdentity<Merchant, IdentityRole<Guid>>()
 builder.Services.AddScoped<TenantService>();
 builder.Services.AddScoped(typeof(Repository<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<MerchantRepository>();
 
 //
 // ─────────────────────────────────────

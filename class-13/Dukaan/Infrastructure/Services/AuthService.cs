@@ -1,5 +1,6 @@
 ﻿using Dukaan.Application.Dtos;
 using Dukaan.Infrastructure.Data.Model;
+using Dukaan.Infrastructure.Data.Repositories;
 using Dukaan.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
@@ -10,13 +11,13 @@ using System.Text;
 
 public class AuthService : IAuthService
 {
-    private readonly UserManager<Merchant> _userManager;
+    private readonly MerchantRepository _merchantRepository;
     private readonly IConfiguration _configuration;
    
 
-    public AuthService(UserManager<Merchant> userManager, IConfiguration configuration)
+    public AuthService(MerchantRepository merchantRepository, IConfiguration configuration)
     {
-        _userManager = userManager;
+        _merchantRepository = merchantRepository;
         _configuration = configuration;
    
     }
@@ -24,13 +25,13 @@ public class AuthService : IAuthService
     public async Task<AuthResponseDTO> LoginAsync(LoginRequestDTO request)
 
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _merchantRepository.GetByEmailAsync(request.Email);
        
 
         if (user == null)
             throw new UnauthorizedAccessException("Invalid Email credentials");
 
-        var isValid = await _userManager.CheckPasswordAsync(user, request.Password);
+        var isValid = await _merchantRepository.GetByPasswordAsync(user, request.Password);
 
         if (!isValid)
             throw new UnauthorizedAccessException("Invalid Password credentials");
@@ -57,7 +58,7 @@ public class AuthService : IAuthService
         var claims = new List<Claim>
         {
             new Claim("sub", user.Id.ToString()),
-            new Claim("email", user.Email ?? ""),
+            new Claim("email", user.Email ??" "),
             new Claim("tenant_id", user.TenantId.ToString())
         };
 
