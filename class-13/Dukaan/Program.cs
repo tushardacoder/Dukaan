@@ -40,6 +40,8 @@ builder.Services.AddScoped<TenantService>();
 builder.Services.AddScoped(typeof(Repository<>));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<MerchantRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 
 //
 // ─────────────────────────────────────
